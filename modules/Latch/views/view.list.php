@@ -14,7 +14,8 @@ class LatchViewList extends SugarView {
         }
 		$appId = isset($sugar_config["appId"]) ? $sugar_config["appId"] : "";
 		$appSecret = isset($sugar_config["appSecret"]) ? $sugar_config["appSecret"] : "";
-		$csrfToken = sha1(rand());
+		$bytes = openssl_random_pseudo_bytes(20);
+		$csrfToken = sha1($bytes);
 		$_SESSION['csrf_token'] = $csrfToken;
         ?>
         <form method="POST" action="./index.php?module=Latch">

@@ -15,7 +15,8 @@ class LatchPairingViewList extends SugarView {
 				unpairLatchAccount($current_user->id);
 			}
 		}
-		$csrfToken = sha1(rand());
+		$bytes = openssl_random_pseudo_bytes(20);
+		$csrfToken = sha1($bytes);
 		$_SESSION['csrf_token'] = $csrfToken;
 		      
         if ($sugar_config['authenticationClass'] == "LatchAuthenticate") {

@@ -8,15 +8,19 @@ class LatchPairingViewList extends SugarView {
 
     function display() {
         global $sugar_config, $current_user;
-        if (isset($_REQUEST ['operation'])) {
-            if (isset($_REQUEST ['pairingToken'])) {
-                pairLatchAccount($_REQUEST ['pairingToken'], $current_user->id);
-            } else if ($_REQUEST ['operation'] == "unpair") {
-                unpairLatchAccount($current_user->id);
-            }
-        }
-        $accountId = getAccountIdFromStorage($current_user->id);
+		if (isset($_POST['csrfToken']) && isset($_SESSION['csrf_token']) &&	$_SESSION['csrf_token'] == $_POST['csrfToken']) {		
+		    if (isset($_POST['operation']) && $_POST['operation'] == "pair" && isset($_POST ['pairingToken'])) {
+				pairLatchAccount($_POST['pairingToken'], $current_user->id);
+			} else if (isset($_POST['operation']) && $_POST['operation'] == "unpair") {
+				unpairLatchAccount($current_user->id);
+			}
+		}
+		$bytes = openssl_random_pseudo_bytes(20);
+		$csrfToken = sha1($bytes);
+		$_SESSION['csrf_token'] = $csrfToken;
+		      
         if ($sugar_config['authenticationClass'] == "LatchAuthenticate") {
+			$accountId = getAccountIdFromStorage($current_user->id);
             ?>
             <form method="POST" action="index.php?module=LatchPairing">
                 <div class="group">
@@ -38,6 +42,7 @@ class LatchPairingViewList extends SugarView {
                             <?php
                         }
                         ?>
+						<input type="hidden" name="csrfToken" id="csrfToken" value="<?php echo htmlentities($csrfToken) ?>">
                     </ul>
                 </div>
             </form>

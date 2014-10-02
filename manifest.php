@@ -14,7 +14,7 @@ $manifest = array(
     'description' => 'ElevenPaths Latch authentication plugin',
     'author' => 'ElevenPaths',
     'published_date' => '28/07/14',
-    'version' => '1.0',
+    'version' => '1.1',
     'type' => 'module',
     'icon' => '',
 );
